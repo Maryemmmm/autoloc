@@ -1,23 +1,24 @@
 package tn.esprit.autoloc.domain;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
-@Entity   // hedhy li tasna3lna l table fi base de donnee
+@Entity
 @Table(name = "vehicule")
-@Getter   // pour remplacer get w set pour chaque attribut ici on utilise biblio comboque
+@Getter
 @Setter
-@NoArgsConstructor    // constructeur par defaut
+@NoArgsConstructor
 @AllArgsConstructor
 public class Vehicule {
 
-    @Id    // cle primaire de tab
-    @GeneratedValue(strategy = GenerationType.IDENTITY)   // comment on va generee lid teena
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVehicule;
 
     @Column(nullable = false, unique = true, length = 20)
@@ -39,4 +40,26 @@ public class Vehicule {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private StatutVehicule statut;
+
+    // Association Agence - Vehicule
+    @ManyToOne
+    @JoinColumn(name = "id_agence")
+    private Agence agence;
+
+    // Association Vehicule - Maintenance
+    @OneToMany(mappedBy = "vehicule")
+    private List<Maintenance> maintenances;
+
+    // Association Vehicule - Reservation
+    @OneToMany(mappedBy = "vehicule")
+    private List<Reservation> reservations;
+
+    // Association Vehicule - Equipement
+    @ManyToMany
+    @JoinTable(
+            name = "vehicule_equipement",
+            joinColumns = @JoinColumn(name = "id_vehicule"),
+            inverseJoinColumns = @JoinColumn(name = "id_equipement")
+    )
+    private List<Equipement> equipements;
 }

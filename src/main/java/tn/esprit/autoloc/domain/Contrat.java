@@ -1,5 +1,5 @@
 package tn.esprit.autoloc.domain;
-
+import java.util.List;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,4 +29,11 @@ public class Contrat {
 
     @Column(nullable = false)
     private boolean valide;
+
+    // Association Contrat - Reservation
+    @OneToOne
+    @JoinColumn(name = "id_reservation")
+    private Reservation reservation;
+    @OneToMany(mappedBy = "contrat")
+    private List<Paiement> paiements;
 }
